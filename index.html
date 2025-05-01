@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8" />
+     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+     integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
+     crossorigin=""/>
+      <!-- Make sure you put this AFTER Leaflet's CSS -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+     integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
+     crossorigin="">
+    </script>
+    <style> 
+      #map { height: 900px;}
+    </style>
+</head>
+
+<body>
+  <div id="map"></div>
+  <script>
+    const POSLIEGECENTRE = {x:50.6442,y:5.5708}
+
+    class MapJob{
+      constructor()
+      {
+        this.poslist = [];
+        let map = L.map('map').setView([50.6442,5.5708], 13);
+        L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+        }).addTo(map);
+        this.m = map;
+      }
+      AddPos(pos,link,text)
+      {
+          let llink = '<a href="'+link+'">'+text+'</a>';
+          let fnd = false;
+          for(let i=0;i<this.poslist.length;i++)
+          {
+            let l = this.poslist[i];
+            if(l.x==pos.x && l.y==pos.y)
+            {
+              this.poslist[i].list.push(llink);
+              fnd = true;
+              break;
+            }
+          }
+          if(fnd==false)
+          {
+            let l = [];
+            l.push(llink);
+            this.poslist.push({x:pos.x,y:pos.y,list:[llink]});
+          }
+      }
+      Draw()
+      {
+        for(let i=0;i<this.poslist.length;i++)
+        {
+          let l = this.poslist[i];
+          let strlink = "<li>";
+          for(let j=0;j<l.list.length;j++)
+          {
+              strlink = strlink + "<ul>";
+              strlink = strlink + l.list[j];
+              strlink = strlink + "</ul>";
+          }
+          strlink = strlink + "</li>";
+           L.marker([l.x,l.y]).addTo(this.m)
+                .bindPopup(strlink)
+                .openPopup();
+        }
+      }
+    };
+    
+    
+    let mj = new MapJob();
+    mj.AddPos(POSLIEGECENTRE,"https://www.facebook.com/photo/?fbid=122207778056080150&set=a.122105751794080150&__cft__[0]=AZUF3Kq2sGP61DyxDDnkC7I-F6-7FQxfV0f8mP6mGlklGHTk547bBaVhg7q0j19R1cQaPVrWeREj9xE2LYQE9EwI6kB8OoMUzjlg6gyRrsQNG7L0cHPcO-xcXWDn3u_x2Qvvya56VB2u8pyRoVwdyYx6_56u54u_OvWwz-jee6VUWw8QBxReM7NGZixq07nccBsV36Y0pK7H8NyXtW7KNDkl17nydMxZN9W1RXwNQJF-fg&__tn__=EH-y-R","vendeur(se) de chaussure")
+    mj.AddPos(POSLIEGECENTRE,"https://www.facebook.com/photo/?fbid=122207776988080150&set=a.122105751794080150&__cft__[0]=AZUBNmRSRa-623BjaS_ZMKp2OljZpnKcTarePVOa5hvflkpuPd4bp0CwzENNpkJEUlOYiNznkG1HV-XNJwDx-tdYxRn0LYag7uyMN4buIMrVpw_MQZKT1kfAGVcLFAg8eP57YG_lACDBcDwfdIl1VI3IVW0xADJ3QBchCJpterHzygdnz9YTpGZTWEzQQdyHnAqHNRe9BULtACYzgMf2cO-JfPm548uuttgkEwAcwL_o0A&__tn__=EH-y-R","vendeur(se) station service");
+    mj.AddPos(POSLIEGECENTRE,"https://www.facebook.com/photo/?fbid=122207776718080150&set=a.122105751794080150&__cft__[0]=AZUkv2Fbrjl2Ux6nV64bM0JLFJYVZOkUQj-YdYtGNevf695UDMutGfZu3EEstb3oGt7jWPtsp7WEB3CRh_aromDyHJhZhDtI12jw3f8zg96bB8h2SbJ5pEGhZUo-ozkeNt55BivM0m_3mHNgxm9FangTG_ukrvWMxuQkYuC0ZXVKUpia0IlJNJYhBsJA2sFy05DuFylYzbhQUSp1uEqZ6uaWtEfHH5N4pRaUGHazudHhKg&__tn__=EH-y-R","pharmacien(ne) / assistant(e) pharmacien(ne)");
+    mj.AddPos(POSLIEGECENTRE,
+    "https://www.facebook.com/photo/?fbid=688629146863297&set=a.190718849987665&__cft__[0]=AZXT_esxOXyhoqEQOkOvP0to_ht0sm8cm0uHDkQe2YUYR9fq69tD4KAzpW_fxu9TTSnJaYeSNprKQMXAXza-IWwQM_o-yW-8jSnDpEgH3AkMg91z8Cu_ulXKd44GdyuIo1Ljr8G9ZvpWJq9vzYkdoZVy0owRvyVTI4Mrj1AwxXvuf9eJY3D-wUuCVIjUhHGZ877Vyfzey7BiRdaNgfBOqYayhmKInFz-bSELvWBAu-5XSQ&__tn__=EH-y-R","référent social collectif (H/F/X)");
+    mj.Draw();
+    
+
+  </script>
+
+</body>
+
+</html>
